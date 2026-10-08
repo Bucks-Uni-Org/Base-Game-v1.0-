@@ -3,7 +3,7 @@ from pygame.locals import *
 import random
 
 #by salman, naji, tyler
-
+#wassup brochachos
 pygame.init()
 
 pygame.joystick.init()
