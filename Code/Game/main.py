@@ -2,6 +2,8 @@ import pygame
 from pygame.locals import *
 import random
 
+#by salman, naji, tyler
+
 pygame.init()
 
 pygame.joystick.init()
