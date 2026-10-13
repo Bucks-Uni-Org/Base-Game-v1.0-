@@ -51,12 +51,14 @@ yellow = (255, 255, 0)
 black = (0, 0, 0)
 
 player_img = pygame.image.load('player.png').convert_alpha()
-enemy_img = pygame.image.load('enemy.png').convert_alpha()
+alien1 = pygame.image.load('red.png').convert_alpha() # red alien
+alien2 = pygame.image.load('green.png').convert_aplha() # green alien
+alien3 = pygame.image.load('yellow.png').convert_alpha() # yellow alien
 
 player_img = pygame.transform.scale(player_img, (50, 30))
-enemy_img = pygame.transform.scale(enemy_img, (40, 25))
-enemy_img = pygame.transform.rotate(enemy_img, 180)
-boss_img = pygame.transform.scale(enemy_img, (120, 40))
+alien1 = pygame.transform.scale(alien1_image, (40, 25))
+alien1_img = pygame.transform.rotate(alien1_image, 180)
+boss_img = pygame.transform.scale(alien1_img, (120, 40))
 
 def draw_text(text, x, y):
     img = font40.render(text, True, white)
