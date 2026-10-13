@@ -1,9 +1,10 @@
+#Adding 2 more types of aliens & changing speeds 
 import pygame
 from pygame.locals import *
 import random
 
 #by salman, naji, tyler
-#wassup brochachos
+
 pygame.init()
 
 pygame.joystick.init()
