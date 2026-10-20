@@ -169,8 +169,6 @@ class Alien(pygame.sprite.Sprite):
             self.image = alien3_img
             
         self.rect = self.image.get_rect(center=(x, y))
-        self.move_dir = 1
-        self.counter = 0
 
     def update(self):
         self.rect.x += self.move_dir
@@ -219,7 +217,7 @@ def create_aliens():
     for row in range(rows): 
         for col in range(cols):
             alien_type = (rows - 1) - row #Adding row for each type of alien
-            alien = Alien(120 + col * 90, 80 + row * 60)
+            alien = Alien(120 + col * 90, 80 + row * 60, alien_type)
             alien_group.add(alien)
 
 create_aliens()
