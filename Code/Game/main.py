@@ -178,7 +178,7 @@ class Alien(pygame.sprite.Sprite):
             self.counter *= -1
 
 class AlienBullet(pygame.sprite.Sprite):
-    def __init__(self, x, y, speed_y=3), speed_x=0):  #adding speed_x for speeding up
+    def __init__(self, x, y, speed_y=3, speed_x=0):  #adding speed_x for speeding up
         super().__init__()
         self.image = pygame.Surface((4, 12))
         self.image.fill(white)
