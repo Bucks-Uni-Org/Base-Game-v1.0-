@@ -51,13 +51,15 @@ yellow = (255, 255, 0)
 black = (0, 0, 0)
 
 player_img = pygame.image.load('player.png').convert_alpha()
-alien1 = pygame.image.load('red.png').convert_alpha() # red alien
-alien2 = pygame.image.load('green.png').convert_aplha() # green alien
-alien3 = pygame.image.load('yellow.png').convert_alpha() # yellow alien
+alien1_img = pygame.image.load('red.png').convert_alpha() # red alien
+alien2_img = pygame.image.load('green.png').convert_alpha() # green alien
+alien3_img = pygame.image.load('yellow.png').convert_alpha() # yellow alien
 
 player_img = pygame.transform.scale(player_img, (50, 30))
-alien1 = pygame.transform.scale(alien1_image, (40, 25))
-alien1_img = pygame.transform.rotate(alien1_image, 180)
+alien1_img = pygame.transform.scale(alien1_img, (40, 25))
+alien1_img = pygame.transform.rotate(alien1_img, 180)
+alien2_img = pygame.transform.scale(alien2_img, (40, 25))
+alien3_img = pygame.transform.scale(alien3_img, (40, 25))
 boss_img = pygame.transform.scale(alien1_img, (120, 40))
 
 def draw_text(text, x, y):
@@ -152,9 +154,20 @@ class Bullet(pygame.sprite.Sprite):
                 boss_health -= 1
 
 class Alien(pygame.sprite.Sprite):
-    def __init__(self, x, y):
+    direction = 1  #The wave of aliens move in sync
+    speed = 1 #Starting speed value that will increase
+    
+    def __init__(self, x, y, alien_type):
         super().__init__()
-        self.image = enemy_img
+        self.alien_type = alien_type
+#Organising the layers of each Alien type
+        if alien_type == 0:
+            self.image = alien1_img
+        elif alien_type == 1:
+            self.image = alien2_img
+        elif alien_type == 2:
+            self.image = alien3_img
+            
         self.rect = self.image.get_rect(center=(x, y))
         self.move_dir = 1
         self.counter = 0
@@ -167,12 +180,11 @@ class Alien(pygame.sprite.Sprite):
             self.counter *= -1
 
 class AlienBullet(pygame.sprite.Sprite):
-    def __init__(self, x, y, speed=3):
+    def __init__(self, x, y, speed_y=3), speed_x=0):  #adding speed_x for speeding up
         super().__init__()
         self.image = pygame.Surface((4, 12))
         self.image.fill(white)
         self.rect = self.image.get_rect(center=(x, y))
-        self.speed = speed
 
     def update(self):
         self.rect.y += self.speed
@@ -204,8 +216,9 @@ alien_bullet_group = pygame.sprite.Group()
 boss_group = pygame.sprite.Group()
 
 def create_aliens():
-    for row in range(rows):
+    for row in range(rows): 
         for col in range(cols):
+            alien_type = (rows - 1) - row #Adding row for each type of alien
             alien = Alien(120 + col * 90, 80 + row * 60)
             alien_group.add(alien)
 
