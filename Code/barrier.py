@@ -3,7 +3,7 @@
 # The channel name is: Programming With Nick
 # The video title is: Python Space Invaders Game Tutorial with Pygame - Beginner Tutorial (OOP)
 # The video link is: https://youtu.be/PFMoo_dvhyw?si=qv6VuKC9bzzJo65L
-# Things I adapted: list comprehension, hex colour method instead of rgb, colour and shape of barrier, class names.
+# Things I adapted: hex colour method instead of rgb, colour and shape of barrier, class names.
 
 import pygame
 
