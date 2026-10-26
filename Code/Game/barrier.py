@@ -45,3 +45,16 @@ class Barrier:
                     pos_y = y + row * 3
                     pixel = Pixel(pos_x, pos_y)
                     self.pixel_group.add(pixel)
+
+# create_barriers function, calculating barrier width and the gaps between
+
+def create_barriers(screen_width, screen_height):
+    barrier_width = len(grid[0]) * 3
+    gap = (screen_width - (4 * barrier_width))/5
+    barriers = []
+    for i in range(4):
+        offset_x = (i + 1) * gap + i * barrier_width
+        barrier = Barrier(offset_x, screen_height - 200)
+        barriers.append(barrier)
+    return barriers
+    
