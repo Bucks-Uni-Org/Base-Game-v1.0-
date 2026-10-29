@@ -1,60 +1,28 @@
-# This file, barrier.py is for the green barriers, which are obstacles in the space invaders game
-# I used a YouTube video to assist me in developing this code
-# The channel name is: Programming With Nick
-# The video title is: Python Space Invaders Game Tutorial with Pygame - Beginner Tutorial (OOP)
-# The video link is: https://youtu.be/PFMoo_dvhyw?si=qv6VuKC9bzzJo65L
-# Things I adapted: hex colour method instead of rgb, colour and shape of barrier, class names.
+# barrier.py contains the code for the green barrier obstacles in the game space invaders.
 
 import pygame
 
-# Pixel class
+class Barrier(pygame.sprite.Sprite):
 
-class Pixel(pygame.sprite.Sprite):
-    def __init__(self, x,y):
-        super().__init__()
-        self.image = pygame.Surface((3,3))
-        self.image.fill(("#39FF14"))
-        self.rect = self.image.get_rect(topleft = (x,y))
-
-# Grid - shape of barriers        
-
-grid = [
-[1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1],
-[1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1],
-[1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1],
-[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
-[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
-[0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
-[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
-[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
-[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-[1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1],
-[1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1],
-[1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1]]
-
-# Barrier class
-
-class Barrier:
     def __init__(self, x, y):
-        self.pixel_group = pygame.sprite.Group()
-        for row in range(len(grid)):
-            for column in range(len(grid[0])):
-                if grid[row][column] == 1:
-                    pos_x = x + column * 3
-                    pos_y = y + row * 3
-                    pixel = Pixel(pos_x, pos_y)
-                    self.pixel_group.add(pixel)
+        super().__init__()
+        self.health = 10
+        self.colour = "#26FF00"
+        self.width = 66
+        self.height = 33
+        self.rect = pygame.Rect(0, 0, self.width, self.height)
+        self.rect.center = (x,y)
 
-# create_barriers function, calculating barrier width and the gaps between
+    def hit(self):
+        self.health -= 1
+        self.width -= 66/18
+        self.height -= 33/18
+        old_center = self.rect.center
+        self.rect = pygame.Rect(0, 0, int(self.width), int(self.height))
+        self.rect.center = old_center
 
-def create_barriers(screen_width, screen_height):
-    barrier_width = len(grid[0]) * 3
-    gap = (screen_width - (4 * barrier_width))/5
-    barriers = []
-    for i in range(4):
-        offset_x = (i + 1) * gap + i * barrier_width
-        barrier = Barrier(offset_x, screen_height - 200)
-        barriers.append(barrier)
-    return barriers
-    
+        if self.health == 8: self.colour = "#3EA521"
+        elif self.health == 6: self.colour = "#35582C"
+        elif self.health == 4: self.colour = "#FF8A04"
+        elif self.health == 2: self.colour = "#FF0000"
+        elif self.health <= 0: self.kill()
