@@ -171,11 +171,7 @@ class Alien(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=(x, y))
 
     def update(self):
-        self.rect.x += self.move_dir
-        self.counter += 1
-        if abs(self.counter) > 60:
-            self.move_dir *= -1
-            self.counter *= -1
+        self.rect.x += Alien.direction * Alien.speed #Fixing old/outdated update funciton for alien class. 
 
 class AlienBullet(pygame.sprite.Sprite):
     def __init__(self, x, y, speed_y=3, speed_x=0):  #adding speed_x for speeding up
@@ -184,8 +180,12 @@ class AlienBullet(pygame.sprite.Sprite):
         self.image.fill(white)
         self.rect = self.image.get_rect(center=(x, y))
 
+        self.speed_y = speed_y   #
+        self.speed_x = speed_x
+
     def update(self):
-        self.rect.y += self.speed
+        self.rect.y += self.speed_y
+        self.rect.x += self.speed_x
 
         if self.rect.top > screen_height:
             self.kill()
