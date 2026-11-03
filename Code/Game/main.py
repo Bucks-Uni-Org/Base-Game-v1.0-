@@ -249,13 +249,26 @@ while run:
         if boss_active and len(boss_group) > 0 and game_over == 0:
             if time_now - boss_last_shot > boss_cooldown:
                 boss_sprite = boss_group.sprites()[0]
-                bullet = AlienBullet(boss_sprite.rect.centerx, boss_sprite.rect.bottom, speed=5)
+                bullet = AlienBullet(boss_sprite.rect.centerx, boss_sprite.rect.bottom, speed_y=5)
                 alien_bullet_group.add(bullet)
                 boss_last_shot = time_now
 
         if game_over == 0:
             game_over = spaceship.update()
             bullet_group.update()
+
+            #Making the alien wave bounce horizontally
+            for alien in alien_group.sprites():
+                #if right or left edge
+                if alien.rect.right >= screen_width or alien.rect.left <=0:
+                    Alien.direction *= -1 #flipping direction for all aliens
+                    for a in alien_group.sprites():
+                        if a.rect.right > screen_width:
+                            a.rect.right = screen_width
+                        if a.rect.left < 0:
+                            a.rect.left = 0
+                    break
+            
             alien_group.update()
             alien_bullet_group.update()
             boss_group.update()
