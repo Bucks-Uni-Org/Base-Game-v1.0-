@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
 import random
+from barrier import create_barriers
 
 #by salman, naji, tyler
 
@@ -208,6 +209,8 @@ def create_aliens():
 
 create_aliens()
 
+green_barriers = create_barriers(screen_width, screen_height)
+
 spaceship = Spaceship(screen_width // 2, screen_height - 100, 3)
 spaceship_group.add(spaceship)
 
@@ -269,6 +272,9 @@ while run:
     alien_group.draw(screen)
     alien_bullet_group.draw(screen)
     boss_group.draw(screen)
+
+    for barrier in green_barriers:
+        barrier.draw(screen)
 
     if boss_active and len(boss_group) > 0:
         draw_text(f"Boss HP: {boss_health}", 10, 10)
