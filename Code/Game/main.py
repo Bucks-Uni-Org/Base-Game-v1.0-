@@ -31,7 +31,7 @@ shoot_sound.set_volume(0.5)
 
 rows = 3
 cols = 5
-alien_cooldown = 1000
+alien_cooldown = 1500 #increased by 500 to make it fair since more bullets 
 last_alien_shot = pygame.time.get_ticks()
 countdown = 3
 last_count = pygame.time.get_ticks()
@@ -235,10 +235,26 @@ while run:
 
         if not boss_active:
             if time_now - last_alien_shot > alien_cooldown and len(alien_group) > 0:
-                alien = random.choice(alien_group.sprites())
-                bullet = AlienBullet(alien.rect.centerx, alien.rect.bottom)
-                alien_bullet_group.add(bullet)
-                last_alien_shot = time_now
+                #sorting living aliens into 3 groups for bullet patterns
+                reds = [a for a in alien_group.sprites() if a.alien_type == 0]
+                greens = [a for a in alien_group.sprites() if a.alien_type == 1]
+                yellows = [a for a in alien_group.sprites() if a.alien_type == 2]
+
+                #red: single bullet
+                if reds:
+                    shooter = random.choice(reds)
+                    alien_bullet_group.add(AlienBullet(shooter.rect.centerx, shooter.rect.bottom))
+                #green: double bullet - shotgun spread
+                if greens:
+                    shooter = random.choice(greens)
+                    alien_bullet_group.add(AlienBullet(shooter.rect.centerx, shooter.rect.bottom, speed_x=-1.5))
+                    alien_bullet_group.add(AlienBullet(shooter.rect.centerx, shooter.rect.bottom, speed_x=1.5))
+                #yellow: 4 bullet - shotgun spread
+                if yellows:
+                    shooter = random.choice(yellows)
+                    for dx in (-2.5, -0.8, 0.8, 2.5):
+                        alien_bullet_group.add(AlienBullet(shooter.rect.centerx, shooter.rect.bottom, speed_x=dx))
+                        
 
             if len(alien_group) == 0 and game_over == 0:
                 boss = Boss(screen_width // 2, 120)
