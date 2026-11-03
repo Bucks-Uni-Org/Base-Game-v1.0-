@@ -80,13 +80,13 @@ class Spaceship(pygame.sprite.Sprite):
         result = 0
 
         key = pygame.key.get_pressed()
-        if key[K_a] and self.rect.left > 0:
+        if (key[K_a] or key[K_LEFT]) and self.rect.left > 0:
             self.rect.x -= speed
-        if key[K_d] and self.rect.right < screen_width:
+        if (key[K_d] or key[KEY_RIGHT]) and self.rect.right < screen_width:
             self.rect.x += speed
-        if key[K_w] and self.rect.top > 0:
+        if (key[K_w] or key[KEY_UP]) and self.rect.top > 0:
             self.rect.y -= speed
-        if key[K_s] and self.rect.bottom < screen_height:
+        if (key[K_s] or key[KEY_DOWN]) and self.rect.bottom < screen_height:
             self.rect.y += speed
 
         time_now = pygame.time.get_ticks()
