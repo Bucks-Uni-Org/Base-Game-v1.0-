@@ -275,7 +275,10 @@ while run:
 
     for barrier in green_barriers: # for every barrier object in the green_barriers sprite group
         barrier_hit = pygame.sprite.spritecollide(barrier, bullet_group, True) # Hold the list of player bullets touching barrier, True deletes them
+        alien_barrier_hit = pygame.sprite.spritecollide(barrier, alien_bullet_group, True) # Hold the list of alien bullets touching barrier
         if barrier_hit: # if the list is not empty, at least one bullet hit
+            barrier.hit() # Then the hit() method from the Barrier class is called on the barrier
+        if alien_barrier_hit: # if the list is not empty, at least one bullet hit
             barrier.hit() # Then the hit() method from the Barrier class is called on the barrier
         barrier.draw(screen) # barrier is drawn on screen
 
