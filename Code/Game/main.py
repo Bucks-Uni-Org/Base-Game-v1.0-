@@ -274,6 +274,9 @@ while run:
     boss_group.draw(screen)
 
     for barrier in green_barriers:
+        barrier_hit = pygame.sprite.spritecollide(barrier, bullet_group, True)
+        if barrier_hit:
+            barrier.hit()
         barrier.draw(screen)
 
     if boss_active and len(boss_group) > 0:
