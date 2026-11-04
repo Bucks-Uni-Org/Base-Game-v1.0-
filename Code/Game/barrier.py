@@ -42,11 +42,11 @@ class Barrier(pygame.sprite.Sprite):
 
 def create_barriers(screen_width, screen_height):
     gap = (screen_width - (4 * 66))/5 # calculate gap by subtracting the width of 4 barriers from screen width, sharing 5 equally spaced gaps
-    barriers = [] # barriers are stored in an empty list
+    barriers = pygame.sprite.Group() # barriers are stored in a sprite group
     for i in range(4): # for loop, running once per barrier, 4 times in total
         offset_x = ((i + 1) * gap) + (i * 66 + 33) # calculate x value centre by adding gaps before it to barriers before it plus half a barrier
         barrier = Barrier(offset_x, screen_height - 200) # Barrier object subtracting 200 to calculate y value centre
-        barriers.append(barrier) # adds this one barrier to the list with .append
+        barriers.add(barrier) # adds this one barrier to the sprite group with .add
     
-    return barriers # send list back to main.py
+    return barriers # send sprite group back to main.py
 

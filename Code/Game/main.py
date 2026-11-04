@@ -1,7 +1,7 @@
 import pygame
 from pygame.locals import *
 import random
-from barrier import create_barriers
+from barrier import create_barriers # Import create_barriers function from barrier.py
 
 #by salman, naji, tyler
 
@@ -209,7 +209,7 @@ def create_aliens():
 
 create_aliens()
 
-green_barriers = create_barriers(screen_width, screen_height)
+green_barriers = create_barriers(screen_width, screen_height) # Variable storing returned sprite group, height and width passed into function
 
 spaceship = Spaceship(screen_width // 2, screen_height - 100, 3)
 spaceship_group.add(spaceship)
@@ -273,11 +273,11 @@ while run:
     alien_bullet_group.draw(screen)
     boss_group.draw(screen)
 
-    for barrier in green_barriers:
-        barrier_hit = pygame.sprite.spritecollide(barrier, bullet_group, True)
-        if barrier_hit:
-            barrier.hit()
-        barrier.draw(screen)
+    for barrier in green_barriers: # for every barrier object in the green_barriers sprite group
+        barrier_hit = pygame.sprite.spritecollide(barrier, bullet_group, True) # Hold the list of player bullets touching barrier, True deletes them
+        if barrier_hit: # if the list is not empty, at least one bullet hit
+            barrier.hit() # Then the hit() method from the Barrier class is called on the barrier
+        barrier.draw(screen) # barrier is drawn on screen
 
     if boss_active and len(boss_group) > 0:
         draw_text(f"Boss HP: {boss_health}", 10, 10)
