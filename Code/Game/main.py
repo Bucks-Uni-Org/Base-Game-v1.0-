@@ -2,8 +2,6 @@ import pygame
 from pygame.locals import *
 import random
 
-#by salman, naji, tyler
-
 pygame.init()
 
 pygame.joystick.init()
@@ -56,17 +54,22 @@ player_img = pygame.transform.scale(player_img, (50, 30))
 enemy_img = pygame.transform.scale(enemy_img, (40, 25))
 enemy_img = pygame.transform.rotate(enemy_img, 180)
 boss_img = pygame.transform.scale(enemy_img, (120, 40))
+life_img = pygame.transform.scale(player_img, (30, 18))
 
 def draw_text(text, x, y):
     img = font40.render(text, True, white)
     screen.blit(img, (x, y))
 
+def draw_lives(lives):
+    for i in range(lives):
+        screen.blit(life_img, (screen_width - 40 - (i * 35), 10))
+
 class Spaceship(pygame.sprite.Sprite):
-    def __init__(self, x, y, health):
+    def __init__(self, x, y, lives):
         super().__init__()
         self.image = player_img
         self.rect = self.image.get_rect(center=(x, y))
-        self.health = health
+        self.lives = lives
         self.last_shot = pygame.time.get_ticks()
 
     def update(self):
@@ -115,11 +118,7 @@ class Spaceship(pygame.sprite.Sprite):
                 shoot_sound.play()
                 self.last_shot = time_now2
 
-        pygame.draw.rect(screen, red, (self.rect.x, self.rect.bottom + 10, 50, 10))
-        pygame.draw.rect(screen, green, (self.rect.x, self.rect.bottom + 10,
-                                         50 * (self.health / 3), 10))
-
-        if self.health <= 0:
+        if self.lives <= 0:
             self.kill()
             result = -1
 
@@ -180,7 +179,7 @@ class AlienBullet(pygame.sprite.Sprite):
 
         if pygame.sprite.spritecollide(self, spaceship_group, False):
             self.kill()
-            spaceship.health -= 1
+            spaceship.lives -= 1
 
 class Boss(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -269,6 +268,7 @@ while run:
     alien_group.draw(screen)
     alien_bullet_group.draw(screen)
     boss_group.draw(screen)
+    draw_lives(spaceship.lives)
 
     if boss_active and len(boss_group) > 0:
         draw_text(f"Boss HP: {boss_health}", 10, 10)
