@@ -49,12 +49,13 @@ black = (0, 0, 0)
 
 player_img = pygame.image.load('player.png').convert_alpha()
 enemy_img = pygame.image.load('enemy.png').convert_alpha()
+life_img = pygame.image.load('heart.png').convert_alpha()
 
 player_img = pygame.transform.scale(player_img, (50, 30))
 enemy_img = pygame.transform.scale(enemy_img, (40, 25))
 enemy_img = pygame.transform.rotate(enemy_img, 180)
 boss_img = pygame.transform.scale(enemy_img, (120, 40))
-life_img = pygame.transform.scale(player_img, (30, 18))
+life_img = pygame.transform.scale(life_img, (30, 18))
 
 def draw_text(text, x, y):
     img = font40.render(text, True, white)
