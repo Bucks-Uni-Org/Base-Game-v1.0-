@@ -73,9 +73,14 @@ class Spaceship(pygame.sprite.Sprite):
         self.start_pos = (x, y)
         self.lives = lives
         self.last_shot = pygame.time.get_ticks()
+        self.invincible_until = 0
+
+    def is_invincible(self):
+        return pygame.time.get_ticks() < self.invincible_until
 
     def respawn(self):
         self.rect.center = self.start_pos
+        self.invincible_until = pygame.time.get_ticks() + 2000 
 
     def update(self):
         speed = 8
@@ -184,8 +189,9 @@ class AlienBullet(pygame.sprite.Sprite):
 
         if pygame.sprite.spritecollide(self, spaceship_group, False):
             self.kill()
-            spaceship.lives -= 1
-            spaceship.respawn()
+            if not spaceship.is_invincible():
+                spaceship.lives -= 1
+                spaceship.respawn()
 
 class Boss(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -270,6 +276,8 @@ while run:
             last_count = pygame.time.get_ticks()
 
     spaceship_group.draw(screen)
+    if spaceship.is_invincible():
+       pygame.draw.circle(screen, (0,200,255), spaceship.rect.center, 35, 2)
     bullet_group.draw(screen)
     alien_group.draw(screen)
     alien_bullet_group.draw(screen)
