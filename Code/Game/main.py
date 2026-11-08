@@ -70,8 +70,12 @@ class Spaceship(pygame.sprite.Sprite):
         super().__init__()
         self.image = player_img
         self.rect = self.image.get_rect(center=(x, y))
+        self.start_pos = (x, y)
         self.lives = lives
         self.last_shot = pygame.time.get_ticks()
+
+    def respawn(self):
+        self.rect.center = self.start_pos
 
     def update(self):
         speed = 8
@@ -181,6 +185,7 @@ class AlienBullet(pygame.sprite.Sprite):
         if pygame.sprite.spritecollide(self, spaceship_group, False):
             self.kill()
             spaceship.lives -= 1
+            spaceship.respawn()
 
 class Boss(pygame.sprite.Sprite):
     def __init__(self, x, y):
