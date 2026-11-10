@@ -82,11 +82,11 @@ class Spaceship(pygame.sprite.Sprite):
         key = pygame.key.get_pressed()
         if (key[K_a] or key[K_LEFT]) and self.rect.left > 0:
             self.rect.x -= speed
-        if (key[K_d] or key[KEY_RIGHT]) and self.rect.right < screen_width:
+        if (key[K_d] or key[K_RIGHT]) and self.rect.right < screen_width:
             self.rect.x += speed
-        if (key[K_w] or key[KEY_UP]) and self.rect.top > 0:
+        if (key[K_w] or key[K_UP]) and self.rect.top > 0:
             self.rect.y -= speed
-        if (key[K_s] or key[KEY_DOWN]) and self.rect.bottom < screen_height:
+        if (key[K_s] or key[K_DOWN]) and self.rect.bottom < screen_height:
             self.rect.y += speed
 
         time_now = pygame.time.get_ticks()
@@ -255,7 +255,8 @@ while run:
                     for dx in (-2.5, -0.8, 0.8, 2.5):
                         alien_bullet_group.add(AlienBullet(shooter.rect.centerx, shooter.rect.bottom, speed_x=dx))
                         
-
+                last_alien_shot = time_now
+            
             if len(alien_group) == 0 and game_over == 0:
                 boss = Boss(screen_width // 2, 120)
                 boss_group.add(boss)
