@@ -274,6 +274,12 @@ while run:
             game_over = spaceship.update()
             bullet_group.update()
 
+            #alien speed increase mechanic as aliens die
+            total_aliens = rows * cols
+            aliens_alive = len(alien_group)
+            if aliens_alive > 0:
+                Alien.speed = 1 + ((total_aliens - aliens_alive) / total_aliens * 2)
+            
             #Making the alien wave bounce horizontally
             for alien in alien_group.sprites():
                 #if right or left edge
