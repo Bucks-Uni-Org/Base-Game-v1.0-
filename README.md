@@ -1,4 +1,9 @@
-# Base-Game-v1.0-
-This is the v1.0 of the space invaders game. This version has 1 boss (10hp) and 5x3 grid of base aliens to shoot(1hp)
+#Player Collisions
+This is the Player Collisions branch
 
+Requirments-
+1. The Player should be able to able to shoot multiple bullets continuously.
+2. Implement collision detection so that invaders are destroyed when successfully shot by player
+3. The player loses a life and respawns(until runs out of lives) when shot by an invader. 
 
+This branch is by Salman
