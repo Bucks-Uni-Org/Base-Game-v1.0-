@@ -1,3 +1,4 @@
+#Adding 2 more types of aliens & changing speeds 
 import pygame
 from pygame.locals import *
 import random
@@ -31,7 +32,7 @@ shoot_sound.set_volume(0.5)
 
 rows = 3
 cols = 5
-alien_cooldown = 1000
+alien_cooldown = 1500 #increased by 500 to make it fair since more bullets 
 last_alien_shot = pygame.time.get_ticks()
 countdown = 3
 last_count = pygame.time.get_ticks()
@@ -51,12 +52,16 @@ yellow = (255, 255, 0)
 black = (0, 0, 0)
 
 player_img = pygame.image.load('player.png').convert_alpha()
-enemy_img = pygame.image.load('enemy.png').convert_alpha()
+alien1_img = pygame.image.load('red.png').convert_alpha() # red alien
+alien2_img = pygame.image.load('green.png').convert_alpha() # green alien
+alien3_img = pygame.image.load('yellow.png').convert_alpha() # yellow alien
 
 player_img = pygame.transform.scale(player_img, (50, 30))
-enemy_img = pygame.transform.scale(enemy_img, (40, 25))
-enemy_img = pygame.transform.rotate(enemy_img, 180)
-boss_img = pygame.transform.scale(enemy_img, (120, 40))
+alien1_img = pygame.transform.scale(alien1_img, (40, 25))
+alien1_img = pygame.transform.rotate(alien1_img, 180)
+alien2_img = pygame.transform.scale(alien2_img, (40, 25))
+alien3_img = pygame.transform.scale(alien3_img, (40, 25))
+boss_img = pygame.transform.scale(alien1_img, (120, 40))
 
 def draw_text(text, x, y):
     img = font40.render(text, True, white)
@@ -76,13 +81,13 @@ class Spaceship(pygame.sprite.Sprite):
         result = 0
 
         key = pygame.key.get_pressed()
-        if key[K_a] and self.rect.left > 0:
+        if (key[K_a] or key[K_LEFT]) and self.rect.left > 0:
             self.rect.x -= speed
-        if key[K_d] and self.rect.right < screen_width:
+        if (key[K_d] or key[K_RIGHT]) and self.rect.right < screen_width:
             self.rect.x += speed
-        if key[K_w] and self.rect.top > 0:
+        if (key[K_w] or key[K_UP]) and self.rect.top > 0:
             self.rect.y -= speed
-        if key[K_s] and self.rect.bottom < screen_height:
+        if (key[K_s] or key[K_DOWN]) and self.rect.bottom < screen_height:
             self.rect.y += speed
 
         time_now = pygame.time.get_ticks()
@@ -150,30 +155,38 @@ class Bullet(pygame.sprite.Sprite):
                 boss_health -= 1
 
 class Alien(pygame.sprite.Sprite):
-    def __init__(self, x, y):
+    direction = 1  #The wave of aliens move in sync
+    speed = 1 #Starting speed value that will increase
+    
+    def __init__(self, x, y, alien_type):
         super().__init__()
-        self.image = enemy_img
+        self.alien_type = alien_type
+#Organising the layers of each Alien type
+        if alien_type == 0:
+            self.image = alien1_img
+        elif alien_type == 1:
+            self.image = alien2_img
+        elif alien_type == 2:
+            self.image = alien3_img
+            
         self.rect = self.image.get_rect(center=(x, y))
-        self.move_dir = 1
-        self.counter = 0
 
     def update(self):
-        self.rect.x += self.move_dir
-        self.counter += 1
-        if abs(self.counter) > 60:
-            self.move_dir *= -1
-            self.counter *= -1
+        self.rect.x += Alien.direction * Alien.speed #Fixing old/outdated update funciton for alien class. 
 
 class AlienBullet(pygame.sprite.Sprite):
-    def __init__(self, x, y, speed=3):
+    def __init__(self, x, y, speed_y=3, speed_x=0):  #adding speed_x for speeding up
         super().__init__()
         self.image = pygame.Surface((4, 12))
         self.image.fill(white)
         self.rect = self.image.get_rect(center=(x, y))
-        self.speed = speed
+
+        self.speed_y = speed_y   #
+        self.speed_x = speed_x
 
     def update(self):
-        self.rect.y += self.speed
+        self.rect.y += self.speed_y
+        self.rect.x += self.speed_x
 
         if self.rect.top > screen_height:
             self.kill()
@@ -202,9 +215,10 @@ alien_bullet_group = pygame.sprite.Group()
 boss_group = pygame.sprite.Group()
 
 def create_aliens():
-    for row in range(rows):
+    for row in range(rows): 
         for col in range(cols):
-            alien = Alien(120 + col * 90, 80 + row * 60)
+            alien_type = (rows - 1) - row #Adding row for each type of alien
+            alien = Alien(120 + col * 90, 80 + row * 60, alien_type)
             alien_group.add(alien)
 
 create_aliens()
@@ -224,11 +238,28 @@ while run:
 
         if not boss_active:
             if time_now - last_alien_shot > alien_cooldown and len(alien_group) > 0:
-                alien = random.choice(alien_group.sprites())
-                bullet = AlienBullet(alien.rect.centerx, alien.rect.bottom)
-                alien_bullet_group.add(bullet)
-                last_alien_shot = time_now
+                #sorting living aliens into 3 groups for bullet patterns
+                reds = [a for a in alien_group.sprites() if a.alien_type == 0]
+                greens = [a for a in alien_group.sprites() if a.alien_type == 1]
+                yellows = [a for a in alien_group.sprites() if a.alien_type == 2]
 
+                #red: single bullet
+                if reds:
+                    shooter = random.choice(reds)
+                    alien_bullet_group.add(AlienBullet(shooter.rect.centerx, shooter.rect.bottom))
+                #green: double bullet - shotgun spread
+                if greens:
+                    shooter = random.choice(greens)
+                    alien_bullet_group.add(AlienBullet(shooter.rect.centerx, shooter.rect.bottom, speed_x=-1.5))
+                    alien_bullet_group.add(AlienBullet(shooter.rect.centerx, shooter.rect.bottom, speed_x=1.5))
+                #yellow: 4 bullet - shotgun spread
+                if yellows:
+                    shooter = random.choice(yellows)
+                    for dx in (-2.5, -0.8, 0.8, 2.5):
+                        alien_bullet_group.add(AlienBullet(shooter.rect.centerx, shooter.rect.bottom, speed_x=dx))
+                        
+                last_alien_shot = time_now
+            
             if len(alien_group) == 0 and game_over == 0:
                 boss = Boss(screen_width // 2, 120)
                 boss_group.add(boss)
@@ -238,13 +269,32 @@ while run:
         if boss_active and len(boss_group) > 0 and game_over == 0:
             if time_now - boss_last_shot > boss_cooldown:
                 boss_sprite = boss_group.sprites()[0]
-                bullet = AlienBullet(boss_sprite.rect.centerx, boss_sprite.rect.bottom, speed=5)
+                bullet = AlienBullet(boss_sprite.rect.centerx, boss_sprite.rect.bottom, speed_y=5)
                 alien_bullet_group.add(bullet)
                 boss_last_shot = time_now
 
         if game_over == 0:
             game_over = spaceship.update()
             bullet_group.update()
+
+            #alien speed increase mechanic as aliens die
+            total_aliens = rows * cols
+            aliens_alive = len(alien_group)
+            if aliens_alive > 0:
+                Alien.speed = 1 + ((total_aliens - aliens_alive) / total_aliens * 2)
+            
+            #Making the alien wave bounce horizontally
+            for alien in alien_group.sprites():
+                #if right or left edge
+                if alien.rect.right >= screen_width or alien.rect.left <=0:
+                    Alien.direction *= -1 #flipping direction for all aliens
+                    for a in alien_group.sprites():
+                        if a.rect.right > screen_width:
+                            a.rect.right = screen_width
+                        if a.rect.left < 0:
+                            a.rect.left = 0
+                    break
+            
             alien_group.update()
             alien_bullet_group.update()
             boss_group.update()
